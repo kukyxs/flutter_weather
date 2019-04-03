@@ -1,6 +1,6 @@
 # flutter_weather
 
-A weather application
+基于郭神 cool weather 接口写的 flutter weather，感谢郭神，[cool weather](https://github.com/guolindev/coolweatherjetpack)
 
 ## Getting Started
 
