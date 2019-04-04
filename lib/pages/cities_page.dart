@@ -20,9 +20,17 @@ class CityListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var _bloc = BlocProvider.of<ProvincesBloc>(context);
     var _themeBloc = BlocProvider.of<SettingBloc>(context);
-    _bloc.requestAllCitiesInProvince(provinceId).then((cs) => _bloc.changeCities(cs));
 
-    return StreamBuilder( // 用于刷新主题色
+    // 数据库数据填充
+    Application.db.queryAllCitiesInProvince(provinceId).then((cs) => _bloc.changeCities(cs));
+    // 网络数据更新列表并刷新数据库数据
+    _bloc.requestAllCitiesInProvince(provinceId).then((cs) {
+      _bloc.changeCities(cs);
+      Application.db.insertCitiesInProvince(cs, provinceId);
+    });
+
+    return StreamBuilder(
+        // 用于刷新主题色
         stream: _themeBloc.colorStream,
         initialData: _themeBloc.color,
         builder: (_, AsyncSnapshot<Color> snapshot) => Theme(
@@ -34,7 +42,8 @@ class CityListPage extends StatelessWidget {
               body: Container(
                 color: Colors.black12,
                 alignment: Alignment.center,
-                child: StreamBuilder( // 用于刷新城市列表
+                // 用于刷新城市列表
+                child: StreamBuilder(
                     stream: _bloc.cityStream,
                     initialData: _bloc.cities,
                     builder: (_, AsyncSnapshot<List<ProvinceModel>> snapshot) => !snapshot.hasData || snapshot.data.isEmpty
@@ -47,7 +56,8 @@ class CityListPage extends StatelessWidget {
                                     alignment: Alignment.centerLeft,
                                     child: Text(snapshot.data[index].name, style: TextStyle(fontSize: 18.0, color: Colors.black)),
                                   ),
-                                  onTap: () => Application.router.navigateTo( // 跳转下层区选择
+                                  // 跳转下层区选择
+                                  onTap: () => Application.router.navigateTo(
                                       context,
                                       Routers.generateCityRouterPath(int.parse(provinceId), snapshot.data[index].id,
                                           FluroConvertUtils.fluroCnParamsEncode(snapshot.data[index].name)),

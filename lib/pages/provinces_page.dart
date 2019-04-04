@@ -15,7 +15,14 @@ class ProvinceListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var _bloc = BlocProvider.of<ProvincesBloc>(context);
     var _themeBloc = BlocProvider.of<SettingBloc>(context);
-    _bloc.requestAllProvinces().then((provinces) => _bloc.changeProvinces(provinces));
+
+    // 数据库数据填充
+    Application.db.queryAllProvinces().then((ps) => _bloc.changeProvinces(ps));
+    // 网络数据更新列表并刷新数据库数据
+    _bloc.requestAllProvinces().then((provinces) {
+      _bloc.changeProvinces(provinces);
+      Application.db.insertProvinces(provinces);
+    });
 
     return StreamBuilder(
         stream: _themeBloc.colorStream,
@@ -29,7 +36,8 @@ class ProvinceListPage extends StatelessWidget {
               body: Container(
                 color: Colors.black12,
                 alignment: Alignment.center,
-                child: StreamBuilder( // 省列表选择
+                // 省列表选择
+                child: StreamBuilder(
                   stream: _bloc.provinceStream,
                   initialData: _bloc.provinces,
                   builder: (_, AsyncSnapshot<List<ProvinceModel>> snapshot) => !snapshot.hasData || snapshot.data.isEmpty
@@ -44,7 +52,8 @@ class ProvinceListPage extends StatelessWidget {
                                 ),
                                 onTap: () => Application.router.navigateTo(
                                     context,
-                                    Routers.generateProvinceRouterPath( // 跳转下层省内城市选择
+                                    // 跳转下层省内城市选择
+                                    Routers.generateProvinceRouterPath(
                                         snapshot.data[index].id, FluroConvertUtils.fluroCnParamsEncode(snapshot.data[index].name)),
                                     transition: TransitionType.fadeIn),
                               ),

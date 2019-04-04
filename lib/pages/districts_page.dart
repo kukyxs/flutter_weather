@@ -22,7 +22,14 @@ class DistrictListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var _bloc = BlocProvider.of<ProvincesBloc>(context);
     var _themeBloc = BlocProvider.of<SettingBloc>(context);
-    _bloc.requestAllDistrictsInCity(provinceId, cityId).then((ds) => _bloc.changeDistricts(ds));
+
+    // 数据库数据填充
+    Application.db.queryAllDistrictsInCity(cityId).then((ds) => _bloc.changeDistricts(ds));
+    // 网络数据更新列表并刷新数据库数据
+    _bloc.requestAllDistrictsInCity(provinceId, cityId).then((ds) {
+      _bloc.changeDistricts(ds);
+      Application.db.insertDistrictsInCity(ds, cityId);
+    });
 
     return StreamBuilder(
         stream: _themeBloc.colorStream,
@@ -36,7 +43,8 @@ class DistrictListPage extends StatelessWidget {
               body: Container(
                 color: Colors.black12,
                 alignment: Alignment.center,
-                child: StreamBuilder( // 区选择，最后一层选择
+                // 区选择，最后一层选择
+                child: StreamBuilder(
                     stream: _bloc.districtStream,
                     initialData: _bloc.districts,
                     builder: (_, AsyncSnapshot<List<DistrictModel>> snapshot) => !snapshot.hasData || snapshot.data.isEmpty
@@ -49,7 +57,8 @@ class DistrictListPage extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   child: Text(snapshot.data[index].name, style: TextStyle(fontSize: 18.0, color: Colors.black)),
                                 ),
-                                onTap: () { // 设置为当前区，并清理路由 stack，将天气界面设置到最上层
+                                // 设置为当前区，并清理路由 stack，将天气界面设置到最上层
+                                onTap: () {
                                   PreferenceUtils.instance.saveString(PreferencesKey.WEATHER_CITY_ID, snapshot.data[index].weather_id);
                                   Application.router.navigateTo(context, Routers.generateWeatherRouterPath(snapshot.data[index].weather_id),
                                       transition: TransitionType.inFromRight, clearStack: true);

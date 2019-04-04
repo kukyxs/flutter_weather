@@ -18,4 +18,20 @@ class DistrictModel {
     }
     return list;
   }
+
+  static DistrictModel fromTDistrictTable(Map<String, dynamic> map) {
+    DistrictModel city = new DistrictModel();
+    city.name = map['district_name'];
+    city.weather_id = map['weather_id'];
+    city.id = map['district_id'];
+    return city;
+  }
+
+  static List<DistrictModel> fromDistrictTableList(dynamic mapList) {
+    List<DistrictModel> list = new List(mapList.length);
+    for (int i = 0; i < mapList.length; i++) {
+      list[i] = fromTDistrictTable(mapList[i]);
+    }
+    return list;
+  }
 }
