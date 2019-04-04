@@ -1,8 +1,11 @@
 import 'package:fluro/fluro.dart';
+import 'package:flutter_weather/bloc/bloc_provider.dart';
+import 'package:flutter_weather/bloc/weather_bloc.dart';
 import 'package:flutter_weather/pages/cities_page.dart';
 import 'package:flutter_weather/pages/districts_page.dart';
 import 'package:flutter_weather/pages/provinces_page.dart';
 import 'package:flutter_weather/pages/splash_page.dart';
+import 'package:flutter_weather/pages/theme_page.dart';
 import 'package:flutter_weather/pages/weather_page.dart';
 import 'package:flutter_weather/utils/fluro_convert_util.dart';
 import 'package:flutter_weather/utils/logger.dart';
@@ -15,7 +18,7 @@ Handler rootHandler = Handler(handlerFunc: (_, params) => SplashPage());
 
 Handler weatherHandler = Handler(handlerFunc: (_, params) {
   String cityId = params['city_id']?.first;
-  return WeatherPage(city: cityId);
+  return BlocProvider(child: WeatherPage(city: cityId), bloc: WeatherBloc());
 });
 
 Handler provincesHandler = Handler(handlerFunc: (_, params) => ProvinceListPage());
@@ -32,3 +35,5 @@ Handler districtsHandler = Handler(handlerFunc: (_, params) {
   String name = params['name']?.first;
   return DistrictListPage(provinceId: provinceId, cityId: cityId, name: FluroConvertUtils.fluroCnParamsDecode(name));
 });
+
+Handler themeHandler = Handler(handlerFunc: (_, params) => ThemePage());

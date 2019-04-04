@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_weather/bloc/bloc_provider.dart';
+import 'package:flutter_weather/bloc/theme_bloc.dart';
 import 'package:flutter_weather/configs/application.dart';
 import 'package:flutter_weather/configs/preferences_key.dart';
 import 'package:flutter_weather/configs/resource.dart';
@@ -9,6 +11,10 @@ import 'package:rxdart/rxdart.dart';
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    PreferenceUtils.instance.getInteger(PreferencesKey.THEME_COLOR_INDEX, 0).then((index) {
+      BlocProvider.of<ThemeBloc>(context).switchTheme(index);
+    });
+
     Observable.timer(0, Duration(milliseconds: 5000)).listen((_) {
       PreferenceUtils.instance.getString(PreferencesKey.WEATHER_CITY_ID).then((city) {
         Application.router.navigateTo(context, city.isEmpty ? Routers.provinces : Routers.generateWeatherRouterPath(city), replace: true);

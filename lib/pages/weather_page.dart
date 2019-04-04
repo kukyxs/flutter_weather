@@ -1,11 +1,11 @@
 import 'package:fluro/fluro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/bloc/bloc_provider.dart';
 import 'package:flutter_weather/bloc/weather_bloc.dart';
 import 'package:flutter_weather/configs/application.dart';
 import 'package:flutter_weather/model/weather_model.dart';
 import 'package:flutter_weather/routers/routers.dart';
-import 'package:flutter/cupertino.dart';
 
 class WeatherPage extends StatelessWidget {
   final String city;
@@ -83,7 +83,9 @@ class HeaderActions extends StatelessWidget {
             icon: Icon(Icons.home, color: Colors.white, size: 32.0),
             onPressed: () => Application.router.navigateTo(context, Routers.provinces, transition: TransitionType.inFromLeft)),
         Text('${snapshot.data.HeWeather[0].basic.location}', style: TextStyle(fontSize: 28.0, color: Colors.white)),
-        IconButton(icon: Icon(Icons.color_lens, color: Colors.white, size: 32.0), onPressed: () {})
+        IconButton(
+            icon: Icon(Icons.color_lens, color: Colors.white, size: 32.0),
+            onPressed: () => Application.router.navigateTo(context, Routers.theme, transition: TransitionType.inFromRight))
       ],
     );
   }

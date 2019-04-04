@@ -24,11 +24,9 @@ class HttpUtils {
     _dio.interceptors.addAll(interceptors);
   }
 
-  Future<Response<T>> getRequest<T>(url, {Map params, ErrorCallback callback}) =>
-      _request(url, GET, params: params, callback: callback);
+  Future<Response<T>> getRequest<T>(url, {Map params, ErrorCallback callback}) => _request(url, GET, params: params, callback: callback);
 
-  Future<Response<T>> postRequest<T>(url, {Map params, ErrorCallback callback}) =>
-      _request(url, POST, params: params, callback: callback);
+  Future<Response<T>> postRequest<T>(url, {Map params, ErrorCallback callback}) => _request(url, POST, params: params, callback: callback);
 
   Future<Response> download(url, path, {ProgressCallback receive, CancelToken token}) =>
       _dio.download(url, path, onReceiveProgress: receive, cancelToken: token);
@@ -59,8 +57,7 @@ class HttpUtils {
       } else if (method == POST) {
         rep = params == null
             ? await _dio.post(url, options: opt, cancelToken: token, onSendProgress: send, onReceiveProgress: receive)
-            : await _dio.post(url,
-                data: params, options: opt, cancelToken: token, onSendProgress: send, onReceiveProgress: receive);
+            : await _dio.post(url, data: params, options: opt, cancelToken: token, onSendProgress: send, onReceiveProgress: receive);
       }
 
       if (rep.statusCode != 200 && callback != null) {

@@ -7,6 +7,7 @@ class Routers {
   static const provinces = '/provinces';
   static const cities = '/cities';
   static const districts = '/districts';
+  static const theme = '/theme';
 
   static configureRouters(Router router) {
     router.notFoundHandler = notFoundHandler;
@@ -20,6 +21,8 @@ class Routers {
     router.define(cities, handler: citiesHandler);
 
     router.define(districts, handler: districtsHandler);
+
+    router.define(theme, handler: themeHandler);
   }
 
   static generateWeatherRouterPath(String cityId) => '$weather?city_id=$cityId';
