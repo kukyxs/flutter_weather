@@ -30,7 +30,12 @@ class SettingsPage extends StatelessWidget {
                         initialData: _bloc.sliverHeader,
                         builder: (_, AsyncSnapshot<bool> sliverSnapshot) => Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: <Widget>[
                               Text('刷新头部是否跟随', style: TextStyle(fontSize: 16.0, color: snapshot.data)),
-                              Switch(value: sliverSnapshot.data, onChanged: (value) => _bloc.changeSliverState(value))
+                              Switch(
+                                  value: sliverSnapshot.data,
+                                  onChanged: (value) {
+                                    _bloc.changeSliverState(value);
+                                    PreferenceUtils.instance.saveBool(PreferencesKey.SLIVER_HEADER, value);
+                                  })
                             ]),
                       )),
                       SliverPadding(

@@ -17,6 +17,11 @@ class SplashPage extends StatelessWidget {
       BlocProvider.of<SettingBloc>(context).switchTheme(index);
     });
 
+    // 刷新头部跟随
+    PreferenceUtils.instance.getBool(PreferencesKey.SLIVER_HEADER, false).then((bool) {
+      BlocProvider.of<SettingBloc>(context).changeSliverState(bool);
+    });
+
     // 5s 计时，如果已经选择城市，跳转天气界面，否则进入城市选择
     Observable.timer(0, Duration(milliseconds: 5000)).listen((_) {
       PreferenceUtils.instance.getString(PreferencesKey.WEATHER_CITY_ID).then((city) {

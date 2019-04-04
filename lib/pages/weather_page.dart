@@ -47,8 +47,8 @@ class WeatherPage extends StatelessWidget {
                                         slivers: <Widget>[
                                           // 刷新是否头部跟随设置不同头部
                                           headerSnapshot.data
-                                              ? SliverHeader(snapshot: snapshot)
-                                              : SliverToBoxAdapter(child: FollowedHeader(snapshot: snapshot)),
+                                              ? SliverToBoxAdapter(child: FollowedHeader(snapshot: snapshot))
+                                              : SliverHeader(snapshot: snapshot),
                                           // 实时天气
                                           SliverPadding(
                                             padding: const EdgeInsets.symmetric(vertical: 30.0),
