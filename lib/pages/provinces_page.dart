@@ -9,6 +9,7 @@ import 'package:flutter_weather/model/province_model.dart';
 import 'package:flutter_weather/routers/routers.dart';
 import 'package:flutter_weather/utils/fluro_convert_util.dart';
 
+/// 全国省选择列表页
 class ProvinceListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class ProvinceListPage extends StatelessWidget {
               body: Container(
                 color: Colors.black12,
                 alignment: Alignment.center,
-                child: StreamBuilder(
+                child: StreamBuilder( // 省列表选择
                   stream: _bloc.provinceStream,
                   initialData: _bloc.provinces,
                   builder: (_, AsyncSnapshot<List<ProvinceModel>> snapshot) => !snapshot.hasData || snapshot.data.isEmpty
@@ -43,7 +44,7 @@ class ProvinceListPage extends StatelessWidget {
                                 ),
                                 onTap: () => Application.router.navigateTo(
                                     context,
-                                    Routers.generateProvinceRouterPath(
+                                    Routers.generateProvinceRouterPath( // 跳转下层省内城市选择
                                         snapshot.data[index].id, FluroConvertUtils.fluroCnParamsEncode(snapshot.data[index].name)),
                                     transition: TransitionType.fadeIn),
                               ),

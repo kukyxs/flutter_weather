@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// shared_preferences 管理类
 class PreferenceUtils {
   static PreferenceUtils _instance;
 

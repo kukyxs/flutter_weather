@@ -7,6 +7,7 @@ import 'package:flutter_weather/configs/application.dart';
 import 'package:flutter_weather/model/weather_model.dart';
 import 'package:flutter_weather/routers/routers.dart';
 
+/// 天气详情展示页
 class WeatherPage extends StatelessWidget {
   final String city;
 
@@ -18,6 +19,7 @@ class WeatherPage extends StatelessWidget {
     _bloc.requestBackground().then((b) => _bloc.updateBackground(b));
     _bloc.requestWeather(city).then((w) => _bloc.updateWeather(w));
 
+    // 设置为沉浸式，不设置主题色修改的 StreamBuilder
     return Scaffold(
       body: StreamBuilder(
           stream: _bloc.backgroundStream,
@@ -69,6 +71,7 @@ class WeatherPage extends StatelessWidget {
   }
 }
 
+/// 顶部操作
 class HeaderActions extends StatelessWidget {
   final AsyncSnapshot<WeatherModel> snapshot;
 
@@ -91,6 +94,7 @@ class HeaderActions extends StatelessWidget {
   }
 }
 
+/// 当前天气详情
 class CurrentWeatherState extends StatelessWidget {
   final AsyncSnapshot<WeatherModel> snapshot;
 
@@ -109,6 +113,7 @@ class CurrentWeatherState extends StatelessWidget {
   }
 }
 
+/// 天气预报
 class WeatherForecast extends StatelessWidget {
   final AsyncSnapshot<WeatherModel> snapshot;
 
@@ -151,6 +156,7 @@ class WeatherForecast extends StatelessWidget {
   }
 }
 
+/// 空气质量
 class AirQuality extends StatelessWidget {
   final AsyncSnapshot<WeatherModel> snapshot;
 
@@ -194,6 +200,7 @@ class AirQuality extends StatelessWidget {
   }
 }
 
+/// 生活建议
 class LifeSuggestions extends StatelessWidget {
   final AsyncSnapshot<WeatherModel> snapshot;
 

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+/// BLoC 基类，所有数据管理都需要继承
 abstract class BaseBloc {
   void dispose();
 }
 
+/// BLoC 部件，在使用数据类管理前需要通过该部件注册管理类，
+/// 如果是全局使用的 BLoC 则注册在 MaterialApp 上层，
+/// 非全局的建议注册在路由
 class BlocProvider<T extends BaseBloc> extends StatefulWidget {
   final Widget child;
   final T bloc;

@@ -24,11 +24,13 @@ class WeatherBloc extends BaseBloc {
 
   Observable<String> get backgroundStream => Observable(_backgroundController.stream);
 
+  /// 更新天气情况
   updateWeather(WeatherModel weather) {
     _weather = weather;
     _weatherController.add(_weather);
   }
 
+  /// 更新天气背景
   updateBackground(String background) {
     _background = background;
     _backgroundController.add(_background);
@@ -36,12 +38,12 @@ class WeatherBloc extends BaseBloc {
 
   Future<WeatherModel> requestWeather(String id) async {
     var resp = await Application.http
-        .getRequest(WeatherApi.WEATHER_STATUS, params: {'cityid': id, 'key': WeatherApi.WEATHER_KEY}, callback: (msg) => _logger.log(msg, 'weather'));
+        .getRequest(WeatherApi.WEATHER_STATUS, params: {'cityid': id, 'key': WeatherApi.WEATHER_KEY}, error: (msg) => _logger.log(msg, 'weather'));
     return WeatherModel.fromMap(resp.data);
   }
 
   Future<String> requestBackground() async {
-    var resp = await Application.http.getRequest(WeatherApi.WEATHER_BACKGROUND, callback: (msg) => _logger.log(msg, 'background'));
+    var resp = await Application.http.getRequest(WeatherApi.WEATHER_BACKGROUND, error: (msg) => _logger.log(msg, 'background'));
     return resp == null || resp.data == null ? WeatherApi.DEFAULT_BACKGROUND : resp.data;
   }
 

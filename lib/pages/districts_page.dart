@@ -10,6 +10,7 @@ import 'package:flutter_weather/model/district_model.dart';
 import 'package:flutter_weather/routers/routers.dart';
 import 'package:flutter_weather/utils/preference_utils.dart';
 
+/// 市内区选择列表页
 class DistrictListPage extends StatelessWidget {
   final String provinceId;
   final String cityId;
@@ -35,7 +36,7 @@ class DistrictListPage extends StatelessWidget {
               body: Container(
                 color: Colors.black12,
                 alignment: Alignment.center,
-                child: StreamBuilder(
+                child: StreamBuilder( // 区选择，最后一层选择
                     stream: _bloc.districtStream,
                     initialData: _bloc.districts,
                     builder: (_, AsyncSnapshot<List<DistrictModel>> snapshot) => !snapshot.hasData || snapshot.data.isEmpty
@@ -48,7 +49,7 @@ class DistrictListPage extends StatelessWidget {
                                   alignment: Alignment.centerLeft,
                                   child: Text(snapshot.data[index].name, style: TextStyle(fontSize: 18.0, color: Colors.black)),
                                 ),
-                                onTap: () {
+                                onTap: () { // 设置为当前区，并清理路由 stack，将天气界面设置到最上层
                                   PreferenceUtils.instance.saveString(PreferencesKey.WEATHER_CITY_ID, snapshot.data[index].weather_id);
                                   Application.router.navigateTo(context, Routers.generateWeatherRouterPath(snapshot.data[index].weather_id),
                                       transition: TransitionType.inFromRight, clearStack: true);

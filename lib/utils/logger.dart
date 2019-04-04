@@ -1,5 +1,6 @@
+/// 打印类
 class Logger {
-  final String _name;
+  final String _name; // 基础打印信息筛选标志
   bool _debug = true;
 
   Logger._internal(this._name);

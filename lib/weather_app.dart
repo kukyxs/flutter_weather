@@ -8,9 +8,9 @@ class WeatherApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        bloc: ThemeBloc(), // 主题色切换
+        bloc: ThemeBloc(), // 主题色切换 BLoC
         child: BlocProvider(
-          bloc: ProvincesBloc(), // 城市切换
+          bloc: ProvincesBloc(), // 城市切换 BLoC
           child: MaterialApp(
             title: 'Weather App',
             onGenerateRoute: Application.router.generator,

@@ -4,6 +4,7 @@ import 'package:flutter_weather/bloc/theme_bloc.dart';
 import 'package:flutter_weather/configs/preferences_key.dart';
 import 'package:flutter_weather/utils/preference_utils.dart';
 
+/// 主题色选择页
 class ThemePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

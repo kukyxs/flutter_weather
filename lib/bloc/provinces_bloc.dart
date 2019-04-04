@@ -6,6 +6,7 @@ import 'package:flutter_weather/utils/api.dart';
 import 'package:flutter_weather/utils/logger.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// 天气城市信息管理类
 class ProvincesBloc extends BaseBloc {
   final _logger = Logger('ProvincesBloc');
 
@@ -25,24 +26,28 @@ class ProvincesBloc extends BaseBloc {
 
   BehaviorSubject<List<DistrictModel>> _districtController = BehaviorSubject();
 
+  /// stream，用于 StreamBuilder 的 stream 参数
   Observable<List<ProvinceModel>> get provinceStream => Observable(_provinceController.stream);
 
   Observable<List<ProvinceModel>> get cityStream => Observable(_citiesController.stream);
 
   Observable<List<DistrictModel>> get districtStream => Observable(_districtController.stream);
 
+  /// 通知刷新省份列表
   changeProvinces(List<ProvinceModel> provinces) {
     _provinces.clear();
     _provinces.addAll(provinces);
     _provinceController.add(_provinces);
   }
 
+  /// 通知刷新城市列表
   changeCities(List<ProvinceModel> cities) {
     _cities.clear();
     _cities.addAll(cities);
     _citiesController.add(_cities);
   }
 
+  /// 通知刷新区列表
   changeDistricts(List<DistrictModel> districts) {
     _districts.clear();
     _districts.addAll(districts);
@@ -51,19 +56,19 @@ class ProvincesBloc extends BaseBloc {
 
   /// 请求全国省
   Future<List<ProvinceModel>> requestAllProvinces() async {
-    var resp = await Application.http.getRequest(WeatherApi.WEATHER_PROVINCE, callback: (msg) => _logger.log(msg, 'province'));
+    var resp = await Application.http.getRequest(WeatherApi.WEATHER_PROVINCE, error: (msg) => _logger.log(msg, 'province'));
     return resp == null || resp.data == null ? [] : ProvinceModel.fromMapList(resp.data);
   }
 
   /// 请求省内城市
   Future<List<ProvinceModel>> requestAllCitiesInProvince(String proid) async {
-    var resp = await Application.http.getRequest('${WeatherApi.WEATHER_PROVINCE}/$proid', callback: (msg) => _logger.log(msg, 'city'));
+    var resp = await Application.http.getRequest('${WeatherApi.WEATHER_PROVINCE}/$proid', error: (msg) => _logger.log(msg, 'city'));
     return resp == null || resp.data == null ? [] : ProvinceModel.fromMapList(resp.data);
   }
 
   /// 请求市内的区
   Future<List<DistrictModel>> requestAllDistrictsInCity(String proid, String cityid) async {
-    var resp = await Application.http.getRequest('${WeatherApi.WEATHER_PROVINCE}/$proid/$cityid', callback: (msg) => _logger.log(msg, 'district'));
+    var resp = await Application.http.getRequest('${WeatherApi.WEATHER_PROVINCE}/$proid/$cityid', error: (msg) => _logger.log(msg, 'district'));
     return resp == null || resp.data == null ? [] : DistrictModel.fromMapList(resp.data);
   }
 

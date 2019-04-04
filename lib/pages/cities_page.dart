@@ -9,6 +9,7 @@ import 'package:flutter_weather/model/province_model.dart';
 import 'package:flutter_weather/routers/routers.dart';
 import 'package:flutter_weather/utils/fluro_convert_util.dart';
 
+/// 省内城市选择列表
 class CityListPage extends StatelessWidget {
   final String provinceId;
   final String name;
@@ -21,7 +22,7 @@ class CityListPage extends StatelessWidget {
     var _themeBloc = BlocProvider.of<ThemeBloc>(context);
     _bloc.requestAllCitiesInProvince(provinceId).then((cs) => _bloc.changeCities(cs));
 
-    return StreamBuilder(
+    return StreamBuilder( // 用于刷新主题色
         stream: _themeBloc.colorStream,
         initialData: _themeBloc.color,
         builder: (_, AsyncSnapshot<Color> snapshot) => Theme(
@@ -33,7 +34,7 @@ class CityListPage extends StatelessWidget {
               body: Container(
                 color: Colors.black12,
                 alignment: Alignment.center,
-                child: StreamBuilder(
+                child: StreamBuilder( // 用于刷新城市列表
                     stream: _bloc.cityStream,
                     initialData: _bloc.cities,
                     builder: (_, AsyncSnapshot<List<ProvinceModel>> snapshot) => !snapshot.hasData || snapshot.data.isEmpty
@@ -46,7 +47,7 @@ class CityListPage extends StatelessWidget {
                                     alignment: Alignment.centerLeft,
                                     child: Text(snapshot.data[index].name, style: TextStyle(fontSize: 18.0, color: Colors.black)),
                                   ),
-                                  onTap: () => Application.router.navigateTo(
+                                  onTap: () => Application.router.navigateTo( // 跳转下层区选择
                                       context,
                                       Routers.generateCityRouterPath(int.parse(provinceId), snapshot.data[index].id,
                                           FluroConvertUtils.fluroCnParamsEncode(snapshot.data[index].name)),

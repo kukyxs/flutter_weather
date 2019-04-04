@@ -14,9 +14,11 @@ void main() {
   Router router = Router();
   Routers.configureRouters(router);
   Application.router = router;
+
   // 初始化 http
   Application.http = HttpUtils(baseUrl: WeatherApi.WEATHER_HOST);
 
+  // 强制竖屏
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]).then((_) {
     runApp(WeatherApp());
 

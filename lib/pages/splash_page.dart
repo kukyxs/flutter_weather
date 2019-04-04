@@ -8,13 +8,16 @@ import 'package:flutter_weather/routers/routers.dart';
 import 'package:flutter_weather/utils/preference_utils.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// 首页信息展示
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // 判断是否选择了新的主题，默认 0，如果选择了则更新
     PreferenceUtils.instance.getInteger(PreferencesKey.THEME_COLOR_INDEX, 0).then((index) {
       BlocProvider.of<ThemeBloc>(context).switchTheme(index);
     });
 
+    // 5s 计时，如果已经选择城市，跳转天气界面，否则进入城市选择
     Observable.timer(0, Duration(milliseconds: 5000)).listen((_) {
       PreferenceUtils.instance.getString(PreferencesKey.WEATHER_CITY_ID).then((city) {
         Application.router.navigateTo(context, city.isEmpty ? Routers.provinces : Routers.generateWeatherRouterPath(city), replace: true);

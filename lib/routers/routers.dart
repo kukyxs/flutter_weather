@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter_weather/routers/handler.dart';
 
+/// fluro 路由管理类
 class Routers {
   static const root = '/';
   static const weather = '/weather';
