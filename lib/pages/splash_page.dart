@@ -1,19 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/configs/application.dart';
+import 'package:flutter_weather/configs/preferences_key.dart';
 import 'package:flutter_weather/configs/resource.dart';
 import 'package:flutter_weather/routers/routers.dart';
+import 'package:flutter_weather/utils/preference_utils.dart';
+import 'package:rxdart/rxdart.dart';
 
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(milliseconds: 2000))
-        .then((_) => Application.router.navigateTo(context, Routers.generateWeatherRouterPath('')));
+    Observable.timer(0, Duration(milliseconds: 5000)).listen((_) {
+      PreferenceUtils.instance.getString(PreferencesKey.WEATHER_CITY_ID).then((city) {
+        Application.router.navigateTo(context, city.isEmpty ? Routers.provinces : Routers.generateWeatherRouterPath(city), replace: true);
+      });
+    });
 
     return Scaffold(
       body: Container(
         alignment: Alignment.center,
         color: Colors.white,
-        child: Image.asset(Resource.pngSplash, width: 200.0, height: 200.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(Resource.pngSplash, width: 200.0, height: 200.0),
+            SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  '所有天气数据均为模拟数据，仅用作学习目的使用，请勿当作真实的天气预报软件来使用',
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  style: TextStyle(color: Colors.red[700], fontSize: 16.0),
+                ))
+          ],
+        ),
       ),
     );
   }

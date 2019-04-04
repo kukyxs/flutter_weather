@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PreferenceUtils {
   static PreferenceUtils _instance;
 
-  static PreferenceUtils get instance => _instance;
+  static PreferenceUtils get instance => PreferenceUtils();
 
   PreferenceUtils._internal();
 

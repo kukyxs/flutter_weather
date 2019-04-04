@@ -4,25 +4,27 @@ import 'package:flutter_weather/routers/handler.dart';
 class Routers {
   static const root = '/';
   static const weather = '/weather';
-  static const china = '/china';
   static const provinces = '/provinces';
   static const cities = '/cities';
+  static const districts = '/districts';
 
   static configureRouters(Router router) {
     router.notFoundHandler = notFoundHandler;
 
     router.define(root, handler: rootHandler);
 
-    router.define(china, handler: chinaHandler);
+    router.define(weather, handler: weatherHandler);
 
-    router.define(provinces, handler: provinceHandler);
+    router.define(provinces, handler: provincesHandler);
 
-    router.define(cities, handler: cityHandler);
+    router.define(cities, handler: citiesHandler);
+
+    router.define(districts, handler: districtsHandler);
   }
 
   static generateWeatherRouterPath(String cityId) => '$weather?city_id=$cityId';
 
-  static generateProvinceRouterPath(String provinceId) => '$provinces?province_id=$provinceId';
+  static generateProvinceRouterPath(int provinceId, String name) => '$cities?province_id=$provinceId&name=$name';
 
-  static generateCityRouterPath(String provinceId, String cityId) => '$cities?province_id=$provinceId&city_id=$cityId';
+  static generateCityRouterPath(int provinceId, int cityId, String name) => '$districts?province_id=$provinceId&city_id=$cityId&name=$name';
 }

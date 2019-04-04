@@ -10,8 +10,6 @@ class HttpUtils {
 
   static HttpUtils _instance;
 
-  Dio get hp => _dio;
-
   HttpUtils._internal({String baseUrl}) {
     _dio = Dio(BaseOptions(baseUrl: baseUrl, connectTimeout: 10000, receiveTimeout: 10000));
   }
