@@ -6,13 +6,13 @@ flutter weather 使用 fluro 实现路由管理，dio 实现网络请求，rxdar
 
 效果图：
 
-![首页.png](https://upload-images.jianshu.io/upload_images/2888797-b1fc3f4f877636dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![首页.png](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E9%A6%96%E9%A1%B5.png)
 
-![天气详情页.gif](https://upload-images.jianshu.io/upload_images/2888797-50e81d7c4da87e57.gif?imageMogr2/auto-orient/strip)
+![天气详情页.gif](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E5%A4%A9%E6%B0%94%E8%AF%A6%E6%83%85%E9%A1%B5.gif)
 
-![全局主题切换.gif](https://upload-images.jianshu.io/upload_images/2888797-eb02699bb66b1535.gif?imageMogr2/auto-orient/strip)
+![全局主题切换.gif](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E5%85%A8%E5%B1%80%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2.gif)
 
-![城市切换.gif](https://upload-images.jianshu.io/upload_images/2888797-3003a99b33b58f43.gif?imageMogr2/auto-orient/strip)
+![城市切换.gif](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E5%9F%8E%E5%B8%82%E5%88%87%E6%8D%A2.gif)
 
 ## Getting Started
 
