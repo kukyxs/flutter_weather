@@ -1,6 +1,8 @@
 # flutter_weather
 
 基于郭神 cool weather 接口写的 flutter weather，感谢郭神，[cool weather](https://github.com/guolindev/coolweatherjetpack)
+flutter weather 使用 fluro 实现路由管理，dio 实现网络请求，rxdart 实现 BLoC 模式，分离逻辑和页面显示
+
 
 ## Getting Started
 
