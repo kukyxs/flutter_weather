@@ -5,7 +5,7 @@ import 'package:flutter_weather/pages/cities_page.dart';
 import 'package:flutter_weather/pages/districts_page.dart';
 import 'package:flutter_weather/pages/provinces_page.dart';
 import 'package:flutter_weather/pages/splash_page.dart';
-import 'package:flutter_weather/pages/theme_page.dart';
+import 'package:flutter_weather/pages/settings_page.dart';
 import 'package:flutter_weather/pages/weather_page.dart';
 import 'package:flutter_weather/utils/fluro_convert_util.dart';
 import 'package:flutter_weather/utils/logger.dart';
@@ -36,4 +36,4 @@ Handler districtsHandler = Handler(handlerFunc: (_, params) {
   return DistrictListPage(provinceId: provinceId, cityId: cityId, name: FluroConvertUtils.fluroCnParamsDecode(name));
 });
 
-Handler themeHandler = Handler(handlerFunc: (_, params) => ThemePage());
+Handler settingsHandler = Handler(handlerFunc: (_, params) => SettingsPage());

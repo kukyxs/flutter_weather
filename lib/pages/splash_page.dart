@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/bloc/bloc_provider.dart';
-import 'package:flutter_weather/bloc/theme_bloc.dart';
+import 'package:flutter_weather/bloc/settings_bloc.dart';
 import 'package:flutter_weather/configs/application.dart';
 import 'package:flutter_weather/configs/preferences_key.dart';
 import 'package:flutter_weather/configs/resource.dart';
@@ -14,7 +14,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // 判断是否选择了新的主题，默认 0，如果选择了则更新
     PreferenceUtils.instance.getInteger(PreferencesKey.THEME_COLOR_INDEX, 0).then((index) {
-      BlocProvider.of<ThemeBloc>(context).switchTheme(index);
+      BlocProvider.of<SettingBloc>(context).switchTheme(index);
     });
 
     // 5s 计时，如果已经选择城市，跳转天气界面，否则进入城市选择

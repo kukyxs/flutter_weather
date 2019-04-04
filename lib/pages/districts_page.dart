@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/bloc/bloc_provider.dart';
 import 'package:flutter_weather/bloc/provinces_bloc.dart';
-import 'package:flutter_weather/bloc/theme_bloc.dart';
+import 'package:flutter_weather/bloc/settings_bloc.dart';
 import 'package:flutter_weather/configs/application.dart';
 import 'package:flutter_weather/configs/preferences_key.dart';
 import 'package:flutter_weather/model/district_model.dart';
@@ -21,7 +21,7 @@ class DistrictListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _bloc = BlocProvider.of<ProvincesBloc>(context);
-    var _themeBloc = BlocProvider.of<ThemeBloc>(context);
+    var _themeBloc = BlocProvider.of<SettingBloc>(context);
     _bloc.requestAllDistrictsInCity(provinceId, cityId).then((ds) => _bloc.changeDistricts(ds));
 
     return StreamBuilder(

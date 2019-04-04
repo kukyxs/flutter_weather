@@ -2,6 +2,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_weather/bloc/bloc_provider.dart';
+import 'package:flutter_weather/bloc/settings_bloc.dart';
 import 'package:flutter_weather/bloc/weather_bloc.dart';
 import 'package:flutter_weather/configs/application.dart';
 import 'package:flutter_weather/model/weather_model.dart';
@@ -16,6 +17,7 @@ class WeatherPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _bloc = BlocProvider.of<WeatherBloc>(context);
+    var _settingBloc = BlocProvider.of<SettingBloc>(context);
     _bloc.requestBackground().then((b) => _bloc.updateBackground(b));
     _bloc.requestWeather(city).then((w) => _bloc.updateWeather(w));
 
@@ -24,11 +26,11 @@ class WeatherPage extends StatelessWidget {
       body: StreamBuilder(
           stream: _bloc.backgroundStream,
           initialData: _bloc.background,
-          builder: (_, AsyncSnapshot<String> snapshot) => Container(
+          builder: (_, AsyncSnapshot<String> themeSnapshot) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  image: DecorationImage(image: NetworkImage(_bloc.background), fit: BoxFit.cover),
+                  image: DecorationImage(image: NetworkImage(themeSnapshot.data), fit: BoxFit.cover),
                 ),
                 child: StreamBuilder(
                     initialData: _bloc.weather,
@@ -37,29 +39,34 @@ class WeatherPage extends StatelessWidget {
                         ? CupertinoActivityIndicator(radius: 12.0)
                         : SafeArea(
                             child: RefreshIndicator(
-                                child: CustomScrollView(
-                                  slivers: <Widget>[
-                                    SliverToBoxAdapter(
-                                      // 头部切换地点等
-                                      child: HeaderActions(snapshot: snapshot),
-                                    ),
-                                    // 实时天气
-                                    SliverPadding(
-                                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                                      sliver: SliverToBoxAdapter(
-                                        child: CurrentWeatherState(snapshot: snapshot),
+                                child: StreamBuilder(
+                                  stream: _settingBloc.headerStream,
+                                  initialData: _settingBloc.sliverHeader,
+                                  builder: (_, headerSnapshot) => CustomScrollView(
+                                        physics: BouncingScrollPhysics(),
+                                        slivers: <Widget>[
+                                          // 刷新是否头部跟随设置不同头部
+                                          headerSnapshot.data
+                                              ? SliverHeader(snapshot: snapshot)
+                                              : SliverToBoxAdapter(child: FollowedHeader(snapshot: snapshot)),
+                                          // 实时天气
+                                          SliverPadding(
+                                            padding: const EdgeInsets.symmetric(vertical: 30.0),
+                                            sliver: SliverToBoxAdapter(
+                                              child: CurrentWeatherState(snapshot: snapshot),
+                                            ),
+                                          ),
+                                          // 天气预报
+                                          WeatherForecast(snapshot: snapshot),
+                                          // 空气质量
+                                          SliverPadding(
+                                            padding: const EdgeInsets.symmetric(vertical: 30.0),
+                                            sliver: SliverToBoxAdapter(child: AirQuality(snapshot: snapshot)),
+                                          ),
+                                          // 生活建议
+                                          SliverToBoxAdapter(child: LifeSuggestions(snapshot: snapshot))
+                                        ],
                                       ),
-                                    ),
-                                    // 天气预报
-                                    WeatherForecast(snapshot: snapshot),
-                                    // 空气质量
-                                    SliverPadding(
-                                      padding: const EdgeInsets.symmetric(vertical: 30.0),
-                                      sliver: SliverToBoxAdapter(child: AirQuality(snapshot: snapshot)),
-                                    ),
-                                    // 生活建议
-                                    SliverToBoxAdapter(child: LifeSuggestions(snapshot: snapshot))
-                                  ],
                                 ),
                                 onRefresh: () async {
                                   _bloc.requestWeather(city).then((w) => _bloc.updateWeather(w));
@@ -71,11 +78,38 @@ class WeatherPage extends StatelessWidget {
   }
 }
 
-/// 顶部操作
-class HeaderActions extends StatelessWidget {
+/// 刷新头部固定
+class SliverHeader extends StatelessWidget {
   final AsyncSnapshot<WeatherModel> snapshot;
 
-  HeaderActions({Key key, this.snapshot}) : super(key: key);
+  SliverHeader({Key key, this.snapshot}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      backgroundColor: Colors.transparent,
+      leading: IconButton(
+          icon: Icon(Icons.home, color: Colors.white, size: 32.0),
+          onPressed: () => Application.router.navigateTo(context, Routers.provinces, transition: TransitionType.inFromLeft)),
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(Icons.settings, color: Colors.white, size: 32.0),
+            onPressed: () => Application.router.navigateTo(context, Routers.settings, transition: TransitionType.inFromRight))
+      ],
+      title: Text(
+        '${snapshot.data.HeWeather[0].basic.location}',
+        style: TextStyle(fontSize: 28.0, color: Colors.white),
+      ),
+      centerTitle: true,
+    );
+  }
+}
+
+/// 刷新头部跟随
+class FollowedHeader extends StatelessWidget {
+  final AsyncSnapshot<WeatherModel> snapshot;
+
+  FollowedHeader({Key key, this.snapshot}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +121,8 @@ class HeaderActions extends StatelessWidget {
             onPressed: () => Application.router.navigateTo(context, Routers.provinces, transition: TransitionType.inFromLeft)),
         Text('${snapshot.data.HeWeather[0].basic.location}', style: TextStyle(fontSize: 28.0, color: Colors.white)),
         IconButton(
-            icon: Icon(Icons.color_lens, color: Colors.white, size: 32.0),
-            onPressed: () => Application.router.navigateTo(context, Routers.theme, transition: TransitionType.inFromRight))
+            icon: Icon(Icons.settings, color: Colors.white, size: 32.0),
+            onPressed: () => Application.router.navigateTo(context, Routers.settings, transition: TransitionType.inFromRight))
       ],
     );
   }
@@ -103,11 +137,14 @@ class CurrentWeatherState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _now = snapshot.data.HeWeather[0].now;
+    var hour = DateTime.now().hour;
+    var min = DateTime.now().minute;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Text('${_now.tmp}℃', style: TextStyle(fontSize: 50.0, color: Colors.white)),
-        Text('${_now.cond_txt}', style: TextStyle(fontSize: 24.0, color: Colors.white))
+        Text('${_now.cond_txt}', style: TextStyle(fontSize: 24.0, color: Colors.white)),
+        Text('刷新时间：${hour < 10 ? '0$hour' : '$hour'}: ${min < 10 ? '0$min' : '$min'}', style: TextStyle(fontSize: 12.0, color: Colors.white)),
       ],
     );
   }

@@ -73,7 +73,9 @@ class HttpUtils {
   }) async {
     try {
       Response<T> rep;
-      state(NetState.requesting);
+      if (state != null) {
+        state(NetState.requesting);
+      }
 
       if (method == GET) {
         /// 当有参数的时候，get 方法使用 queryParams 会出错，不懂原因，使用拼接没有问题
@@ -84,6 +86,7 @@ class HttpUtils {
           });
           url += sb.toString().substring(0, sb.length - 1);
         }
+
         rep = await _dio.get(url, options: opt, onReceiveProgress: receive, cancelToken: token);
       } else if (method == POST) {
         rep = params == null
@@ -92,18 +95,25 @@ class HttpUtils {
       }
 
       if (rep.statusCode != 200 && error != null) {
-        state(NetState.failed);
+        if (state != null) {
+          state(NetState.failed);
+        }
         error('network error, and code is ${rep.statusCode}');
         return null;
       }
 
-      state(NetState.succeed);
+      if (state != null) {
+        state(NetState.succeed);
+      }
       return rep;
     } catch (e) {
       if (error != null) {
         error('network error, catch error: ${e.toString()}');
       }
-      state(NetState.failed);
+
+      if (state != null) {
+        state(NetState.failed);
+      }
       return null;
     }
   }
