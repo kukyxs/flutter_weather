@@ -21,6 +21,13 @@ class WeatherPage extends StatelessWidget {
     var _bloc = BlocProvider.of<WeatherBloc>(context);
     var _settingBloc = BlocProvider.of<SettingBloc>(context);
     _bloc.requestBackground().then((b) => _bloc.updateBackground(b));
+
+    _bloc.readWeatherFromFile().then((s) {
+      if (s.isNotEmpty) {
+        _bloc.updateWeather(WeatherModel.fromMap(json.decode(s)));
+      }
+    });
+
     _bloc.requestWeather(city).then((w) => _bloc.updateWeather(w));
 
     // 设置为沉浸式，不设置主题色修改的 StreamBuilder
@@ -32,6 +39,7 @@ class WeatherPage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
+                  color: Colors.black12,
                   image: DecorationImage(image: NetworkImage(themeSnapshot.data), fit: BoxFit.cover),
                 ),
                 child: StreamBuilder(
