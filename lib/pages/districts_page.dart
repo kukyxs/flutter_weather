@@ -59,8 +59,8 @@ class DistrictListPage extends StatelessWidget {
                                 ),
                                 // 设置为当前区，并清理路由 stack，将天气界面设置到最上层
                                 onTap: () {
-                                  PreferenceUtils.instance.saveString(PreferencesKey.WEATHER_CITY_ID, snapshot.data[index].weather_id);
-                                  Application.router.navigateTo(context, Routers.generateWeatherRouterPath(snapshot.data[index].weather_id),
+                                  PreferenceUtils.instance.saveString(PreferencesKey.WEATHER_CITY_ID, snapshot.data[index].weatherId);
+                                  Application.router.navigateTo(context, Routers.generateWeatherRouterPath(snapshot.data[index].weatherId),
                                       transition: TransitionType.inFromRight, clearStack: true);
                                 }),
                             itemCount: snapshot.data.length,

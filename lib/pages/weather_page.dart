@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +55,7 @@ class WeatherPage extends StatelessWidget {
                                           SliverPadding(
                                             padding: const EdgeInsets.symmetric(vertical: 30.0),
                                             sliver: SliverToBoxAdapter(
-                                              child: CurrentWeatherState(snapshot: snapshot),
+                                              child: CurrentWeatherState(snapshot: snapshot, city: city),
                                             ),
                                           ),
                                           // 天气预报
@@ -97,7 +99,7 @@ class SliverHeader extends StatelessWidget {
             onPressed: () => Application.router.navigateTo(context, Routers.settings, transition: TransitionType.inFromRight))
       ],
       title: Text(
-        '${snapshot.data.HeWeather[0].basic.location}',
+        '${snapshot.data.heWeather[0].basic.location}',
         style: TextStyle(fontSize: 28.0, color: Colors.white),
       ),
       centerTitle: true,
@@ -119,7 +121,7 @@ class FollowedHeader extends StatelessWidget {
         IconButton(
             icon: Icon(Icons.home, color: Colors.white, size: 32.0),
             onPressed: () => Application.router.navigateTo(context, Routers.provinces, transition: TransitionType.inFromLeft)),
-        Text('${snapshot.data.HeWeather[0].basic.location}', style: TextStyle(fontSize: 28.0, color: Colors.white)),
+        Text('${snapshot.data.heWeather[0].basic.location}', style: TextStyle(fontSize: 28.0, color: Colors.white)),
         IconButton(
             icon: Icon(Icons.settings, color: Colors.white, size: 32.0),
             onPressed: () => Application.router.navigateTo(context, Routers.settings, transition: TransitionType.inFromRight))
@@ -131,20 +133,31 @@ class FollowedHeader extends StatelessWidget {
 /// 当前天气详情
 class CurrentWeatherState extends StatelessWidget {
   final AsyncSnapshot<WeatherModel> snapshot;
+  final String city;
 
-  CurrentWeatherState({Key key, this.snapshot}) : super(key: key);
+  CurrentWeatherState({Key key, this.snapshot, this.city}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var _now = snapshot.data.HeWeather[0].now;
-    var hour = DateTime.now().hour;
-    var min = DateTime.now().minute;
+    var _now = snapshot.data.heWeather[0].now;
+    var update = snapshot.data.heWeather[0].update.loc.split(' ').last;
+    var _bloc = BlocProvider.of<WeatherBloc>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         Text('${_now.tmp}℃', style: TextStyle(fontSize: 50.0, color: Colors.white)),
-        Text('${_now.cond_txt}', style: TextStyle(fontSize: 24.0, color: Colors.white)),
-        Text('刷新时间：${hour < 10 ? '0$hour' : '$hour'}: ${min < 10 ? '0$min' : '$min'}', style: TextStyle(fontSize: 12.0, color: Colors.white)),
+        Text('${_now.condTxt}', style: TextStyle(fontSize: 24.0, color: Colors.white)),
+        Padding(padding: const EdgeInsets.only(top: 4.0)),
+        InkWell(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Icon(Icons.refresh, size: 16.0, color: Colors.white),
+                Padding(padding: const EdgeInsets.only(left: 4.0)),
+                Text(update, style: TextStyle(fontSize: 12.0, color: Colors.white))
+              ],
+            ),
+            onTap: () => _bloc.requestWeather(city).then((w) => _bloc.updateWeather(w)))
       ],
     );
   }
@@ -158,7 +171,7 @@ class WeatherForecast extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _forecastList = snapshot.data.HeWeather[0].daily_forecast;
+    var _forecastList = snapshot.data.heWeather[0].dailyForecasts;
 
     return SliverFixedExtentList(
         delegate: SliverChildBuilderDelegate(
@@ -174,7 +187,7 @@ class WeatherForecast extends StatelessWidget {
                       children: <Widget>[
                         Text(_forecastList[index - 1].date, style: TextStyle(fontSize: 16.0, color: Colors.white)),
                         Expanded(
-                            child: Center(child: Text(_forecastList[index - 1].cond.txt_d, style: TextStyle(fontSize: 16.0, color: Colors.white))),
+                            child: Center(child: Text(_forecastList[index - 1].cond.txtD, style: TextStyle(fontSize: 16.0, color: Colors.white))),
                             flex: 2),
                         Expanded(
                             child: Row(
@@ -201,7 +214,7 @@ class AirQuality extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var quality = snapshot.data.HeWeather[0].aqi.city;
+    var quality = snapshot.data.heWeather[0].aqi.city;
     return Container(
         padding: const EdgeInsets.all(12.0),
         color: Colors.black54,
@@ -248,7 +261,7 @@ class LifeSuggestions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _suggestion = snapshot.data.HeWeather[0].suggestion;
+    var _suggestion = snapshot.data.heWeather[0].suggestion;
 
     return Container(
       padding: const EdgeInsets.all(12.0),

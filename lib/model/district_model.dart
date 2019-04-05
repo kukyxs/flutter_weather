@@ -1,12 +1,12 @@
 class DistrictModel {
   String name;
-  String weather_id;
+  String weatherId;
   int id;
 
   static DistrictModel fromMap(Map<String, dynamic> map) {
     DistrictModel city = new DistrictModel();
     city.name = map['name'];
-    city.weather_id = map['weather_id'];
+    city.weatherId = map['weather_id'];
     city.id = map['id'];
     return city;
   }
@@ -22,7 +22,7 @@ class DistrictModel {
   static DistrictModel fromTDistrictTable(Map<String, dynamic> map) {
     DistrictModel city = new DistrictModel();
     city.name = map['district_name'];
-    city.weather_id = map['weather_id'];
+    city.weatherId = map['weather_id'];
     city.id = map['district_id'];
     return city;
   }

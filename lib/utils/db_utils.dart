@@ -85,7 +85,7 @@ class DatabaseUtils {
     var batch = _db.batch();
     districts.forEach((d) => batch.rawInsert(
           'insert or ignore into $_tableDistricts (district_id, district_name, weather_id, city_id) values (?, ?, ?, ?)',
-          [d.id, d.name, d.weather_id, cityid],
+          [d.id, d.name, d.weatherId, cityid],
         ));
     batch.commit();
   }

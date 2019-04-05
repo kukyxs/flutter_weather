@@ -1,9 +1,9 @@
 class WeatherModel {
-  List<WeatherInfo> HeWeather;
+  List<WeatherInfo> heWeather;
 
   static WeatherModel fromMap(Map<String, dynamic> map) {
     WeatherModel weather = new WeatherModel();
-    weather.HeWeather = WeatherInfo.fromMapList(map['HeWeather']);
+    weather.heWeather = WeatherInfo.fromMapList(map['HeWeather']);
     return weather;
   }
 
@@ -24,7 +24,7 @@ class WeatherInfo {
   NowBean now;
   SuggestionBean suggestion;
   UpdateBean update;
-  List<Daily_forecastListBean> daily_forecast;
+  List<ForecastBean> dailyForecasts;
 
   static WeatherInfo fromMap(Map<String, dynamic> map) {
     WeatherInfo heWeatherListBean = new WeatherInfo();
@@ -35,7 +35,7 @@ class WeatherInfo {
     heWeatherListBean.now = NowBean.fromMap(map['now']);
     heWeatherListBean.suggestion = SuggestionBean.fromMap(map['suggestion']);
     heWeatherListBean.update = UpdateBean.fromMap(map['update']);
-    heWeatherListBean.daily_forecast = Daily_forecastListBean.fromMapList(map['daily_forecast']);
+    heWeatherListBean.dailyForecasts = ForecastBean.fromMapList(map['daily_forecast']);
     return heWeatherListBean;
   }
 
@@ -69,8 +69,8 @@ class AqiBean {
 class BasicBean {
   String cid;
   String location;
-  String parent_city;
-  String admin_area;
+  String parentCity;
+  String adminArea;
   String cnty;
   String lat;
   String lon;
@@ -83,8 +83,8 @@ class BasicBean {
     BasicBean basicBean = new BasicBean();
     basicBean.cid = map['cid'];
     basicBean.location = map['location'];
-    basicBean.parent_city = map['parent_city'];
-    basicBean.admin_area = map['admin_area'];
+    basicBean.parentCity = map['parent_city'];
+    basicBean.adminArea = map['admin_area'];
     basicBean.cnty = map['cnty'];
     basicBean.lat = map['lat'];
     basicBean.lon = map['lon'];
@@ -106,35 +106,35 @@ class BasicBean {
 
 class NowBean {
   String cloud;
-  String cond_code;
-  String cond_txt;
+  String condCode;
+  String condTxt;
   String fl;
   String hum;
   String pcpn;
   String pres;
   String tmp;
   String vis;
-  String wind_deg;
-  String wind_dir;
-  String wind_sc;
-  String wind_spd;
+  String windDeg;
+  String windDir;
+  String windSc;
+  String windSpd;
   CondBean cond;
 
   static NowBean fromMap(Map<String, dynamic> map) {
     NowBean nowBean = new NowBean();
     nowBean.cloud = map['cloud'];
-    nowBean.cond_code = map['cond_code'];
-    nowBean.cond_txt = map['cond_txt'];
+    nowBean.condCode = map['cond_code'];
+    nowBean.condTxt = map['cond_txt'];
     nowBean.fl = map['fl'];
     nowBean.hum = map['hum'];
     nowBean.pcpn = map['pcpn'];
     nowBean.pres = map['pres'];
     nowBean.tmp = map['tmp'];
     nowBean.vis = map['vis'];
-    nowBean.wind_deg = map['wind_deg'];
-    nowBean.wind_dir = map['wind_dir'];
-    nowBean.wind_sc = map['wind_sc'];
-    nowBean.wind_spd = map['wind_spd'];
+    nowBean.windDeg = map['wind_deg'];
+    nowBean.windDir = map['wind_dir'];
+    nowBean.windSc = map['wind_sc'];
+    nowBean.windSpd = map['wind_spd'];
     nowBean.cond = CondBean.fromMap(map['cond']);
     return nowBean;
   }
@@ -190,21 +190,21 @@ class UpdateBean {
   }
 }
 
-class Daily_forecastListBean {
+class ForecastBean {
   String date;
   CondBean cond;
   TmpBean tmp;
 
-  static Daily_forecastListBean fromMap(Map<String, dynamic> map) {
-    Daily_forecastListBean daily_forecastListBean = new Daily_forecastListBean();
-    daily_forecastListBean.date = map['date'];
-    daily_forecastListBean.cond = CondBean.fromMap(map['cond']);
-    daily_forecastListBean.tmp = TmpBean.fromMap(map['tmp']);
-    return daily_forecastListBean;
+  static ForecastBean fromMap(Map<String, dynamic> map) {
+    ForecastBean forecast = new ForecastBean();
+    forecast.date = map['date'];
+    forecast.cond = CondBean.fromMap(map['cond']);
+    forecast.tmp = TmpBean.fromMap(map['tmp']);
+    return forecast;
   }
 
-  static List<Daily_forecastListBean> fromMapList(dynamic mapList) {
-    List<Daily_forecastListBean> list = new List(mapList.length);
+  static List<ForecastBean> fromMapList(dynamic mapList) {
+    List<ForecastBean> list = new List(mapList.length);
     for (int i = 0; i < mapList.length; i++) {
       list[i] = fromMap(mapList[i]);
     }
@@ -301,11 +301,11 @@ class SportBean {
 }
 
 class CondBean {
-  String txt_d;
+  String txtD;
 
   static CondBean fromMap(Map<String, dynamic> map) {
     CondBean condBean = new CondBean();
-    condBean.txt_d = map['txt_d'];
+    condBean.txtD = map['txt_d'];
     return condBean;
   }
 

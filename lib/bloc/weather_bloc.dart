@@ -43,7 +43,7 @@ class WeatherBloc extends BaseBloc {
   }
 
   Future<String> requestBackground() async {
-    var resp = await Application.http.getRequest(WeatherApi.WEATHER_BACKGROUND, error: (msg) => _logger.log(msg, 'background'));
+    var resp = await Application.http.getRequest<String>(WeatherApi.WEATHER_BACKGROUND, error: (msg) => _logger.log(msg, 'background'));
     return resp == null || resp.data == null ? WeatherApi.DEFAULT_BACKGROUND : resp.data;
   }
 
