@@ -5,7 +5,7 @@
 flutter weather 使用 fluro 实现路由管理，dio 实现网络请求，
 rxdart 实现 BLoC 模式，分离逻辑和页面显示，使用 sqflite 作为本地城市列表数据持久化。
 
-效果图自行查看文件夹 [snapshots](https://github.com/kukyxs/flutter_weather/blob/master/snapshots)
+flutter 入门教程可查看博客：[简书](https://www.jianshu.com/nb/34950817)
 
 ![首页](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E9%A6%96%E9%A1%B5.png)
 
@@ -14,6 +14,8 @@ rxdart 实现 BLoC 模式，分离逻辑和页面显示，使用 sqflite 作为�
 ![全局主题切换](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E5%85%A8%E5%B1%80%E4%B8%BB%E9%A2%98%E5%88%87%E6%8D%A2.gif)
 
 ![城市切换](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E5%9F%8E%E5%B8%82%E5%88%87%E6%8D%A2.gif)
+
+效果图文件夹 [snapshots](https://github.com/kukyxs/flutter_weather/blob/master/snapshots)
 
 ## Getting Started
 
