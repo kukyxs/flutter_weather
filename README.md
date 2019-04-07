@@ -7,6 +7,8 @@ rxdart 实现 BLoC 模式，分离逻辑和页面显示，使用 sqflite 作为�
 
 flutter 入门教程可查看博客：[简书](https://www.jianshu.com/nb/34950817)
 
+本项目的接口可查看文件：[flutter_weather_api](https://github.com/kukyxs/flutter_weather/blob/master/lib/utils/api.dart)
+
 ![首页](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E9%A6%96%E9%A1%B5.png)
 
 ![天气详情](https://github.com/kukyxs/flutter_weather/blob/master/snapshots/%E5%A4%A9%E6%B0%94%E8%AF%A6%E6%83%85%E9%A1%B5.gif)
