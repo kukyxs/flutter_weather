@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_weather/bloc/bloc_provider.dart';
 import 'package:flutter_weather/bloc/settings_bloc.dart';
 import 'package:flutter_weather/bloc/weather_bloc.dart';
@@ -31,59 +33,74 @@ class WeatherPage extends StatelessWidget {
     _bloc.requestWeather(city).then((w) => _bloc.updateWeather(w));
 
     // 设置为沉浸式，不设置主题色修改的 StreamBuilder
-    return Scaffold(
-      body: StreamBuilder(
-          stream: _bloc.backgroundStream,
-          initialData: _bloc.background,
-          builder: (_, AsyncSnapshot<String> themeSnapshot) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.black12,
-                  image: DecorationImage(image: NetworkImage(themeSnapshot.data), fit: BoxFit.cover),
-                ),
-                child: StreamBuilder(
-                    initialData: _bloc.weather,
-                    stream: _bloc.weatherStream,
-                    builder: (_, AsyncSnapshot<WeatherModel> snapshot) => !snapshot.hasData
-                        ? CupertinoActivityIndicator(radius: 12.0)
-                        : SafeArea(
-                            child: RefreshIndicator(
-                                child: StreamBuilder(
-                                  stream: _settingBloc.headerStream,
-                                  initialData: _settingBloc.sliverHeader,
-                                  builder: (_, headerSnapshot) => CustomScrollView(
-                                        physics: BouncingScrollPhysics(),
-                                        slivers: <Widget>[
-                                          // 刷新是否头部跟随设置不同头部
-                                          headerSnapshot.data
-                                              ? SliverToBoxAdapter(child: FollowedHeader(snapshot: snapshot))
-                                              : SliverHeader(snapshot: snapshot),
-                                          // 实时天气
-                                          SliverPadding(
-                                            padding: const EdgeInsets.symmetric(vertical: 30.0),
-                                            sliver: SliverToBoxAdapter(
-                                              child: CurrentWeatherState(snapshot: snapshot, city: city),
+    return WillPopScope(
+      onWillPop: () {
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(content: Text('是否退出当前 App'), actions: <Widget>[
+                  FlatButton(
+                      child: Text('好的走你~'),
+                      onPressed: () {
+                        SystemNavigator.pop();
+                        exit(0);
+                      }),
+                  FlatButton(child: Text('容我三思~'), onPressed: () => Navigator.of(context).pop())
+                ]));
+      },
+      child: Scaffold(
+        body: StreamBuilder(
+            stream: _bloc.backgroundStream,
+            initialData: _bloc.background,
+            builder: (_, AsyncSnapshot<String> themeSnapshot) => Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.black12,
+                    image: DecorationImage(image: NetworkImage(themeSnapshot.data), fit: BoxFit.cover),
+                  ),
+                  child: StreamBuilder(
+                      initialData: _bloc.weather,
+                      stream: _bloc.weatherStream,
+                      builder: (_, AsyncSnapshot<WeatherModel> snapshot) => !snapshot.hasData
+                          ? CupertinoActivityIndicator(radius: 12.0)
+                          : SafeArea(
+                              child: RefreshIndicator(
+                                  child: StreamBuilder(
+                                    stream: _settingBloc.headerStream,
+                                    initialData: _settingBloc.sliverHeader,
+                                    builder: (_, headerSnapshot) => CustomScrollView(
+                                          physics: BouncingScrollPhysics(),
+                                          slivers: <Widget>[
+                                            // 刷新是否头部跟随设置不同头部
+                                            headerSnapshot.data
+                                                ? SliverToBoxAdapter(child: FollowedHeader(snapshot: snapshot))
+                                                : SliverHeader(snapshot: snapshot),
+                                            // 实时天气
+                                            SliverPadding(
+                                              padding: const EdgeInsets.symmetric(vertical: 30.0),
+                                              sliver: SliverToBoxAdapter(
+                                                child: CurrentWeatherState(snapshot: snapshot, city: city),
+                                              ),
                                             ),
-                                          ),
-                                          // 天气预报
-                                          WeatherForecast(snapshot: snapshot),
-                                          // 空气质量
-                                          SliverPadding(
-                                            padding: const EdgeInsets.symmetric(vertical: 30.0),
-                                            sliver: SliverToBoxAdapter(child: AirQuality(snapshot: snapshot)),
-                                          ),
-                                          // 生活建议
-                                          SliverToBoxAdapter(child: LifeSuggestions(snapshot: snapshot))
-                                        ],
-                                      ),
-                                ),
-                                onRefresh: () async {
-                                  _bloc.requestWeather(city).then((w) => _bloc.updateWeather(w));
-                                  return null;
-                                }),
-                          )),
-              )),
+                                            // 天气预报
+                                            WeatherForecast(snapshot: snapshot),
+                                            // 空气质量
+                                            SliverPadding(
+                                              padding: const EdgeInsets.symmetric(vertical: 30.0),
+                                              sliver: SliverToBoxAdapter(child: AirQuality(snapshot: snapshot)),
+                                            ),
+                                            // 生活建议
+                                            SliverToBoxAdapter(child: LifeSuggestions(snapshot: snapshot))
+                                          ],
+                                        ),
+                                  ),
+                                  onRefresh: () async {
+                                    _bloc.requestWeather(city).then((w) => _bloc.updateWeather(w));
+                                    return null;
+                                  }),
+                            )),
+                )),
+      ),
     );
   }
 }
