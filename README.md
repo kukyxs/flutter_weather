@@ -5,7 +5,7 @@
 flutter weather 使用 fluro 实现路由管理，dio 实现网络请求，
 rxdart 实现 BLoC 模式，分离逻辑和页面显示，使用 sqflite 作为本地城市列表数据持久化。
 
-flutter 入门教程可查看博客：[简书](https://www.jianshu.com/nb/34950817)
+flutter 入门教程可查看博客：[掘金](https://juejin.im/user/588719c72f301e0069a581f7/posts) 或者 [简书](https://www.jianshu.com/nb/34950817)
 
 本项目的接口可查看文件：[flutter_weather_api](https://github.com/kukyxs/flutter_weather/blob/master/lib/utils/api.dart)
 
